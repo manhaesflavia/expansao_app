@@ -133,6 +133,9 @@ html,body{overflow-x:hidden}
   <button data-v="content">Content <span class="code">CT</span></button>
   <div class="grp">Semanas</div>
   <button data-v="week">Semana <span class="code">W</span></button>
+  <div class="grp">Viagem</div>
+  <button data-v="checklist">Checklist pre-viagem <span class="code">CV</span></button>
+  <button data-v="roma">Roma semana 1 <span class="code">RM</span></button>
   <div class="grp">Review & Lab</div>
   <button data-v="debug">Debug my life <span class="code">DB</span></button>
   <button data-v="lab">System Lab <span class="code">L</span></button>
@@ -311,6 +314,62 @@ V.monthly=()=>H("Monthly Review",`${pad(MREV)} out · último domingo · resulta
 V.body=()=>H("Body Review","final do mês · tendências")+`<div class="grid g2">${["O que mudou?","Como estou me sentindo?","Como está minha força?","Como estão minhas roupas?","O que mostram as medidas?","O que mostram as fotos?","O que mostram as métricas?","O que quero testar no próximo ciclo?"].map((q,i)=>box(q,`br.${i}`,"mid")).join("")}</div>`;
 V.nov=()=>H("November RMM","Expansion Sprint 02 · dia 27 de outubro · entrada: System Lab + Monthly Review")+`<div class="grid g2">${["O que quero viver?","O que quero construir?","O que quero melhorar?","O que quero experimentar?"].map((q,i)=>box(q,`nov.rmm.${i}`,"mid")).join("")}</div><div class="card"><h3>3–5 prioridades</h3>${numbered("nov.prio",5)}</div>
  <div class="card"><h3>Lab → v2 <span class="hint">itens registrados no System Lab</span></h3>${get("lab",[]).length?`<ul>${get("lab",[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:`<p class="rule">Nada registrado ainda.</p>`}</div>`;
+
+// ------------------------------------------------------------------ viagem
+V.checklist=()=>{
+  const DIAS=[
+    ["SEG 12 (feriado)",[["Pagar conta de luz","cv.12.0"],["Simular emprestimo no banco","cv.12.1"],["Msg dentista: resina + orcamento clareamento","cv.12.2"],["Perguntar cor da resina se clarear depois","cv.12.3"],["Msg agendar micro sobrancelha (14 a 16)","cv.12.4"],["Perguntar retoque da micro","cv.12.5"],["Agendar Espaco Laser (17 a 20)","cv.12.6"],["Agendar salao pra raiz (22)","cv.12.7"],["Agendar unha de gel (23)","cv.12.8"],["Msg Maviel: sessao quarta 14 almoco","cv.12.9"],["Comprar online: cadeado, protetor auricular, fone","cv.12.10"],["2 pomodoros de trabalho","cv.12.11"],["Arrumar casa pra mudanca","cv.12.12"],["Separar roupas: vai / fica / duvida","cv.12.13"],["1 pomodoro italiano","cv.12.14"],["1 pomodoro: roteiro Roma","cv.12.15"]]],
+    ["TER 13",[["8h botox e rosto","cv.13.0"],["Mudanca pra casa dos pais","cv.13.1"]]],
+    ["QUA 14",[["Maviel no almoco","cv.14.0"],["Comprar biscoito cachorros","cv.14.1"],["Academia","cv.14.2"],["Trabalho","cv.14.3"],["Micro da sobrancelha","cv.14.4"]]],
+    ["QUI 15",[["Arrumar quarto (cachorros comigo)","cv.15.0"],["Fechar emprestimo","cv.15.1"],["Reservar: Coliseu, Vaticano, Galleria Borghese","cv.15.2"],["Trabalho","cv.15.3"]]],
+    ["SEX 16",[["Comprar euro e libra","cv.16.0"],["Academia","cv.16.1"],["Trabalho","cv.16.2"]]],
+    ["SAB 17 / DOM 18",[["Post Insta 1 (artigo 1)","cv.17.0"],["Depilacao a laser","cv.17.1"],["UK ETA (autorizacao Reino Unido)","cv.17.2"],["Ver se ETIAS ja esta valendo","cv.17.3"],["Contratar seguro viagem","cv.17.4"],["Conferir validade passaporte","cv.17.5"]]],
+    ["SEG 19",[["Academia","cv.19.0"],["Trabalho","cv.19.1"],["Resina com dentista","cv.19.2"],["Cartao internacional (Wise/Nomad) + avisar banco","cv.19.3"],["Chip / eSIM","cv.19.4"]]],
+    ["TER 20",[["Post Insta 2 (artigo 2)","cv.20.0"],["Trabalho","cv.20.1"],["Imprimir: hostel, passagem volta, comprovante renda","cv.20.2"],["Adaptador tomada (Italia e UK)","cv.20.3"]]],
+    ["QUA 21",[["Academia","cv.21.0"],["Trabalho","cv.21.1"],["Separar remedios e receitas","cv.21.2"],["Combinar quem cuida dos cachorros","cv.21.3"]]],
+    ["QUI 22",[["Raiz do cabelo no salao","cv.22.0"],["Trabalho","cv.22.1"]]],
+    ["SEX 23",[["Unha de gel","cv.23.0"],["Academia","cv.23.1"],["Trabalho","cv.23.2"]]],
+    ["SAB 24",[["Mala final","cv.24.0"],["Separar maquiagem basica","cv.24.1"],["Check-in do voo","cv.24.2"],["Documentos na bolsa","cv.24.3"]]],
+    ["DOM 25",[["ROMA","cv.25.0"]]]
+  ];
+  let totalFeito=0,totalItens=0;
+  DIAS.forEach(([,items])=>items.forEach(([,k])=>{totalItens++;if(get(k,false))totalFeito++}));
+  const pct=totalItens?Math.round(totalFeito/totalItens*100):0;
+  return `<div class="hello"><h1>Checklist Viagem</h1><p class="greeting">Roma · dom 25/10</p>
+    <div class="xp">${pct}%</div><div class="xp-label">${totalFeito} de ${totalItens} feitos</div>
+    <div class="daybar" style="margin-top:16px"><div class="track"><div class="fill" style="width:${pct}%;background:var(--accent)"></div></div></div></div>
+    ${DIAS.map(([dia,items])=>{
+      const done=items.filter(([,k])=>get(k,false)).length;
+      return `<div class="card"><h3>${dia} <span class="hint">${done}/${items.length}</span></h3><ul class="chk" style="gap:10px">${items.map(([label,k])=>cb(k,label)).join("")}</ul></div>`
+    }).join("")}`;
+};
+
+V.roma=()=>{
+  const DIAS=[
+    ["DIA 1 - DOM 25 (chegada)",[["Check-in no hostel","rm.1.0"],["Caminhar ate Santa Maria Maggiore","rm.1.1"],["Jantar: Mercato Centrale (Termini)","rm.1.2"]]],
+    ["DIA 2 - SEG 26: Roma Antiga",[["Coliseu de manha cedo","rm.2.0"],["Forum Romano + Palatino","rm.2.1"],["Tarde: bairro Monti","rm.2.2"],["Jantar em Monti","rm.2.3"]]],
+    ["DIA 3 - TER 27: Centro historico",[["Fontana di Trevi (antes das 8h)","rm.3.0"],["Pantheon","rm.3.1"],["Piazza Navona","rm.3.2"],["Campo de Fiori","rm.3.3"],["Almoco: Supplizio ou Roscioli","rm.3.4"],["Piazza di Spagna","rm.3.5"]]],
+    ["DIA 4 - QUA 28: Vaticano",[["Museus Vaticanos + Capela Sistina","rm.4.0"],["Basilica de Sao Pedro","rm.4.1"],["Almoco: Pizzarium (Bonci)","rm.4.2"],["Castel Sant Angelo + ponte","rm.4.3"]]],
+    ["DIA 5 - QUI 29: Trastevere",[["Passear pelas ruelas","rm.5.0"],["Santa Maria in Trastevere","rm.5.1"],["Por do sol no Gianicolo","rm.5.2"],["Jantar: Da Enzo al 29","rm.5.3"]]],
+    ["DIA 6 - SEX 30: Villa Borghese",[["Galleria Borghese","rm.6.0"],["Parque Villa Borghese","rm.6.1"],["Terraco do Pincio","rm.6.2"],["Piazza del Popolo","rm.6.3"],["Compras: Via del Corso","rm.6.4"]]],
+    ["DIA 7 - SAB 31: Aventino + Testaccio",[["Buraco da fechadura do Aventino","rm.7.0"],["Jardim das Laranjeiras","rm.7.1"],["Mercado de Testaccio (almoco)","rm.7.2"],["Termas de Caracalla","rm.7.3"]]]
+  ];
+  const RESERVAR=[["Coliseu + Forum + Palatino (colosseo.it)","rm.res.0"],["Museus Vaticanos + Capela Sistina (museivaticani.va)","rm.res.1"],["Galleria Borghese","rm.res.2"]];
+  let totalFeito=0,totalItens=0;
+  DIAS.forEach(([,items])=>items.forEach(([,k])=>{totalItens++;if(get(k,false))totalFeito++}));
+  RESERVAR.forEach(([,k])=>{totalItens++;if(get(k,false))totalFeito++});
+  const pct=totalItens?Math.round(totalFeito/totalItens*100):0;
+  return `<div class="hello"><h1>Roma</h1><p class="greeting">Semana 1 · The Yellow, Via Palestro</p>
+    <div class="xp">${pct}%</div><div class="xp-label">${totalFeito} de ${totalItens} feitos</div>
+    <div class="daybar" style="margin-top:16px"><div class="track"><div class="fill" style="width:${pct}%;background:var(--accent)"></div></div></div></div>
+    <div class="card"><h3>Reservar antes (esgota)</h3><ul class="chk" style="gap:10px">${RESERVAR.map(([label,k])=>cb(k,label)).join("")}</ul></div>
+    ${DIAS.map(([dia,items])=>{
+      const done=items.filter(([,k])=>get(k,false)).length;
+      return `<div class="card"><h3>${dia} <span class="hint">${done}/${items.length}</span></h3><ul class="chk" style="gap:10px">${items.map(([label,k])=>cb(k,label)).join("")}</ul></div>`
+    }).join("")}
+    <div class="card"><h3>Perto do hostel pra comer</h3><ul style="margin:0;padding-left:20px;color:var(--ink2)"><li>Mercato Centrale (Termini)</li><li>Pinsere (pinsa, Via Flavia)</li><li>Panella (padaria, Via Merulana)</li><li>Fassi (gelato, Esquilino)</li><li>Supermercado pra cafe da manha</li></ul></div>
+    <div class="card"><h3>Dicas</h3><ul style="margin:0;padding-left:20px;color:var(--ink2)"><li>Agua das fontinhas (nasoni) e potavel, leva garrafa</li><li>Cafe no balcao e mais barato que sentado</li><li>Cuidado com batedor de carteira na Termini e metro</li><li>Dom 1/11: museus estatais gratis (lota)</li></ul></div>`;
+};
 
 // ------------------------------------------------------------------ render & events
 const main=document.getElementById("main");
