@@ -1,15 +1,19 @@
-# Construi um pipeline de dados pessoal para gerenciar rotina e habitos
+# Recebi meu laudo de TDAH em julho. Em outubro, comecei a construir meu proprio pipeline de dados pra lidar com isso.
 
-Testei agendas, apps de habito, planners. Nenhum funcionou. O padrao era sempre o mesmo: usava por 3 dias, abandonava, tentava outro.
+Em julho de 2026 eu recebi meu laudo de TDAH adulto. Nao foi surpresa. Foi mais um "ah, entao era isso" pra muita coisa que nunca fez sentido: os planners abandonados no terceiro dia, as listas que eu fazia com empolgacao e nunca abria de novo, a sensacao de que eu sabia exatamente o que precisava fazer mas nao conseguia comecar.
 
-Quando parei pra analisar por que nenhum sistema funcionava, percebi que o problema nao era de produtividade. Era de **dados**. Nenhum desses apps me permitia responder perguntas basicas:
+Fiz o que todo mundo faz. Testei apps. Routinery, Habitica, Todoist, Google Agenda, planners em papel, planners em Notion. Funcionavam por uns dias. Depois viravam mais uma aba fechada.
+
+O problema nao era falta de ferramenta. Era que nenhuma dessas ferramentas me deixava responder perguntas basicas:
 
 - Em que horario eu realmente sou produtiva?
-- Qual habito eu mantenho e qual eu abandono?
+- Qual habito eu mantenho e qual eu abandono -- e por que?
 - O que acontece nos dias em que eu travo?
 - Treinar de manha muda meu dia ou nao?
 
-Sao perguntas de analytics. E eu sou engenheira de dados. Entao construi o meu proprio sistema.
+Sao perguntas de analytics. E eu sou engenheira de dados. Entao em outubro eu parei de procurar o app perfeito e comecei a construir o meu.
+
+O projeto se chama **Expansao**. E eu sou o caso de estudo.
 
 ---
 
@@ -141,24 +145,33 @@ Reducao de 50k para 1.2k tokens. Isso nao e otimizacao de software. E o resultad
 
 ---
 
-## Isso e uma serie
+## Isso e uma serie. E eu sou o experimento.
 
-Esse artigo e o primeiro. Ele cobre a arquitetura, o schema e as decisoes de engenharia. Os proximos vao cobrir o que nenhum artigo tecnico costuma mostrar: **os dados reais**.
+Esse e o artigo 1. Ele cobre a arquitetura, o schema e as decisoes de engenharia.
 
-Eu sou o caso de estudo do meu proprio pipeline. Vou usar o Expansao no dia a dia, coletar dados sobre minha rotina, e publicar o que o sistema me ensinou. Sem filtro.
+A partir de agora, todo mes eu vou publicar os resultados reais. Sem filtro. O que eu consegui manter, onde eu travei, o que os dados mostraram que eu nao teria visto sozinha.
 
-O que esperar nos proximos artigos:
+Eu vou abrir os numeros:
 
-- **Os dados da primeira semana**: quantos checks marquei, onde abandonei, o que o outcome 'blocked' me mostrou sobre minha rotina
-- **Classificacao por LLM em producao**: como o pipeline decide se "to exausta" e um log, uma captura ou um trigger de intervencao
-- **O que funciona e o que nao funciona**: gamificacao resolveu? streak motivou ou virou pressao? a barra de tempo do dia mudou meu comportamento?
-- **Deteccao de padroes**: quando os dados sao suficientes pra SQL + embeddings identificarem que eu vou travar -- e agirem antes
-- **MCP em producao**: como um assistente pessoal consulta seus proprios dados gastando 97% menos tokens
+- Quantos checks marquei. Quantos dias abandonei.
+- Quais habitos sobreviveram e quais eu deixei morrer -- e o `outcome` vai mostrar se foi por bloqueio, por escolha ou por esquecimento.
+- Se a gamificacao funcionou ou virou mais uma coisa que eu ignorei.
+- Se o pipeline realmente muda comportamento ou se e so um dashboard bonito que eu nao abro.
 
-A pergunta que essa serie tenta responder: **uma engenheira de dados consegue usar o que sabe de pipeline, schema e analytics pra resolver um problema pessoal real?**
+Alem dos dados, os proximos artigos vao cobrir:
 
-Acompanha pra ver o resultado.
+- **Classificacao por LLM**: como o pipeline decide se "to exausta" e um log, uma captura ou um trigger de intervencao
+- **Deteccao de padroes**: SQL + embeddings pra identificar quando eu vou travar -- e agir antes
+- **MCP em producao**: um assistente pessoal que consulta meus dados gastando 97% menos tokens
+
+A pergunta que essa serie tenta responder: **uma engenheira de dados consegue usar o que sabe de pipeline, schema e analytics pra mudar a propria rotina?**
+
+Eu nao sei a resposta. Mas vou publicar ela aqui, com dados.
+
+Spoiler do artigo 2: daqui a 10 dias eu embarco pra uma eurotrip. Fuso novo, hostel, sem rotina fixa, sem academia. O pipeline vai coletar dados de uma rotina completamente fora do padrao. Vamos ver o que sobrevive.
+
+Acompanha.
 
 ---
 
-*Expansao e um projeto pessoal. Pipeline de dados para gestao de rotina e habitos. Esse e o artigo 1 de uma serie. Em desenvolvimento.*
+*Expansao · artigo 1 de uma serie · pipeline de dados pessoal para gestao de rotina e habitos.*
