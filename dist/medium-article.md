@@ -15,6 +15,8 @@ Sao perguntas de analytics. E eu sou engenheira de dados. Entao em outubro eu pa
 
 O projeto se chama **Expansao**. E eu sou o caso de estudo.
 
+Timing: em 2026, a stack pra fazer isso existe e esta madura. MCP (Model Context Protocol) permite que um assistente consulte dados estruturados via tools tipadas em vez de receber um dump de texto. RAG com pgvector permite busca semantica sobre texto livre sem sair do Postgres. LLMs classificam entrada de voz ou texto com prompts de 100 tokens. Nada disso existia de forma acessivel dois anos atras. Hoje uma pessoa sozinha monta um pipeline pessoal com a mesma arquitetura que empresas usam em producao.
+
 ---
 
 ## O que e o Expansao
