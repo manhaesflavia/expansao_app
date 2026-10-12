@@ -1,0 +1,24 @@
+# OS
+Thumbs.db
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Generated
+dist/*.pdf
+dist/*.html
+dist/stories/
+prev/
+
+# Node (future)
+node_modules/
