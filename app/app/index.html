@@ -84,6 +84,32 @@ tr.sun td.d{color:var(--accent)}
 @media(max-width:900px){.app{grid-template-columns:minmax(0,1fr)}.app>div{min-width:0}.kpi{grid-template-columns:1fr 1fr;gap:10px}.kpi .k b{font-size:28px}.card{padding:14px}h1{font-size:30px}}
 html,body{overflow-x:hidden}
 .grid.g2>div{min-width:0}.card{min-width:0}
+[data-tip]{position:relative;cursor:help}[data-tip]:hover:after{content:attr(data-tip);position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:400;letter-spacing:0;text-transform:none;white-space:nowrap;z-index:99;pointer-events:none;opacity:0;animation:tipIn .15s forwards}@keyframes tipIn{to{opacity:1}}
+.hello{text-align:center;padding:60px 20px 40px}
+.hello h1{font-size:52px;margin-bottom:8px}
+.hello .greeting{font-size:18px;color:var(--ink2);margin:0 0 40px}
+.hello .wins{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
+.hello .win{background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:20px 24px;min-width:120px;text-align:center}
+.hello .win b{display:block;font-family:var(--serif);font-size:42px;line-height:1;font-weight:500;color:var(--accent)}
+.hello .win span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2)}
+.hello .start{margin-top:10px}
+.hello .start button{font:inherit;font-size:16px;padding:14px 32px;border:none;border-radius:10px;cursor:pointer;margin:8px;transition:transform .1s}
+.hello .start button:hover{transform:scale(1.03)}
+.hello .start .primary{background:var(--ink);color:#fff}
+.hello .start .secondary{background:var(--card);border:1px solid var(--rule);color:var(--ink)}
+.hello .frase{margin-top:36px;font-style:italic;color:var(--ink2);font-size:15px}
+.hello .streak{display:inline-block;background:var(--accent);color:#fff;padding:10px 22px;border-radius:30px;font-size:14px;font-weight:600;letter-spacing:.05em;margin:20px 0;animation:popIn .3s ease}
+@keyframes popIn{0%{transform:scale(0.5);opacity:0}100%{transform:scale(1);opacity:1}}
+.hello .xp{font-family:var(--serif);font-size:64px;font-weight:500;color:var(--accent);line-height:1;margin:10px 0}
+.hello .xp-label{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+.hello .check-done{animation:checkPop .2s ease}@keyframes checkPop{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:scale(1)}}
+.hello .micro{font-size:13px;color:var(--ink2);margin-top:6px}
+.daybar{max-width:380px;margin:0 auto 20px;position:relative}
+.daybar .track{height:10px;background:#e5e8ec;border-radius:5px;overflow:hidden}
+.daybar .fill{height:100%;border-radius:5px;transition:width .5s ease}
+.daybar .labels{display:flex;justify-content:space-between;font-size:10px;color:var(--ink2);margin-top:4px;letter-spacing:.08em;text-transform:uppercase}
+.daybar .dot{position:absolute;top:-2px;width:14px;height:14px;border-radius:50%;background:var(--ink);border:2px solid var(--paper);transform:translateX(-50%);transition:left .5s ease}
+@media(max-width:900px){.hello{padding:40px 16px 30px}.hello h1{font-size:36px}.hello .wins{gap:10px}.hello .win{padding:14px 16px;min-width:100px}.hello .win b{font-size:32px}.hello .xp{font-size:48px}}
 </style>
 </head>
 <body>
@@ -94,7 +120,6 @@ html,body{overflow-x:hidden}
   <div class="grp">Início</div>
   <button data-v="dash">Dashboard</button>
   <button data-v="today">Hoje <span class="code">D</span></button>
-  <button data-v="guide">Guia de uso <span class="code">GUIA</span></button>
   <button data-v="chaos">Chaos Mode <span class="code">X</span></button>
   <button data-v="capture">Capture It <span class="code">C</span></button>
   <div class="grp">Mês</div>
@@ -158,30 +183,57 @@ const table=(k,cols,rows)=>`<table><tr>${cols.map(c=>`<th>${c}</th>`).join("")}<
 // ------------------------------------------------------------------ views
 const V={};
 V.dash=()=>{
-  const d=curDay;
-  const cpDone=CP.filter((_,i)=>get(`d${d}.cp${i}`,false)).length;
-  const top=[0,1,2].filter(i=>get(`d${d}.topdone${i}`,false)).length;
-  let treinos=0;for(let x=1;x<=31;x++)if(get(`d${x}.body3`,false)||get(`d${x}.r1`,false))treinos++;
-  const rout=ROUT.filter((_,i)=>get(`d${d}.r${i}`,false)).length;
-  const lab=get("lab",[]).length,cap=get("capture",[]).length;
-  const pri=[0,1,2,3,4].map(i=>get(`prio.${i}`)).filter(Boolean);
-  const dd=DAYS[d-1];
-  return H("Dashboard",`${pad(d)} de outubro · ${WD[dd.getDay()]} · semana ${weekOf(d)}`)+
-  (d===ROUTE?`<div class="banner">Hoje · Route Review → R1</div>`:d===MREV?`<div class="banner">Hoje · Monthly Review → R2 · Body Review → R3</div>`:d===RMM?`<div class="banner">Hoje · RMM — November → N</div>`:"")+
-  `<div class="kpi">
-    <div class="k"><b>${cpDone}/6</b><span>checkpoints hoje</span><div class="bar"><i style="width:${cpDone/6*100}%"></i></div></div>
-    <div class="k"><b>${top}/3</b><span>top 3 concluídos</span><div class="bar"><i style="width:${top/3*100}%"></i></div></div>
-    <div class="k"><b>${rout}/${ROUT.length}</b><span>rotinas feitas hoje</span><div class="bar"><i style="width:${rout/ROUT.length*100}%"></i></div></div>
-    <div class="k"><b>${treinos}</b><span>treinos no mês</span></div>
-    <div class="k"><b>${cap}</b><span>itens no inbox · ${lab} no lab</span></div>
-  </div>
-  <div class="grid g2">
-    <div class="card"><h3>O que importa <span class="hint">prioridades do mês</span></h3>${pri.length?`<ol style="font-size:16px;margin:0;padding-left:24px">${pri.map(p=>`<li>${esc(p)}</li>`).join("")}</ol>`:`<p class="rule">Defina em RMM → Prioridades.</p>`}</div>
-    <div class="card"><h3>Agora <span class="hint">qual é a próxima microação?</span></h3>${ed(`d${d}.now`,"pegar roupa → vestir → tênis → sair…","mid")}</div>
-    <div class="card"><h3>Top 3 de hoje</h3>${[0,1,2].map(i=>`<div class="row"><input type="checkbox" data-k="d${d}.topdone${i}" ${get(`d${d}.topdone${i}`,false)?"checked":""}>${ed(`d${d}.top${i}`,"","one")}</div>`).join("")}</div>
-    <div class="card"><h3>Capture it <span class="hint">pipocou? escreva aqui</span></h3>${list("capture","qualquer coisa que apareceu na cabeça")}</div>
-  </div>
-  <p class="rule">Regra do mês: <b>usar → observar → registrar.</b> Vontade de mudar o sistema? Vai para o System Lab.</p>`;
+  const d=curDay,dd=DAYS[d-1];
+  const hora=new Date().getHours();
+  const saudacao=hora<12?"Bom dia":hora<18?"Boa tarde":"Boa noite";
+  const ALL_H=[["agua","Tomei agua"],["remedio","Tomei remedio"],["cafe","Cafe"],["cachorro","Cachorros"],["banho","Banho"],["almoco","Almocei"],["treino","Treinei"],["foco","Trabalhei focado"],["casa","Algo em casa"],["leitura","Li algo"],["estudo","Estudei"],["conteudo","Criei conteudo"],["alimentacao","Comi bem"],["sono","Dormi 7h+"]];
+  let items;
+  if(hora<12)items=[["agua","Tomei agua"],["remedio","Remedio"],["cafe","Cafe"],["cachorro","Cachorros"],["banho","Banho"]];
+  else if(hora<18)items=[["almoco","Almocei"],["agua","Tomei agua"],["treino","Treinei"],["foco","Trabalhei focado"],["casa","Algo em casa"]];
+  else items=[["treino","Treinei"],["leitura","Li algo"],["estudo","Estudei"],["conteudo","Criei conteudo"],["alimentacao","Comi bem"],["sono","Vou dormir 7h+"],["cachorro","Cachorros"]];
+  let xpHoje=0;ALL_H.forEach(([k])=>{if(get(`d${d}.h.${k}`,false))xpHoje++});
+  [0,1,2].forEach(i=>{if(get(`d${d}.topdone${i}`,false))xpHoje+=3});
+  if(get(`d${d}.log`))xpHoje+=2;
+  if(get(`d${d}.notes`))xpHoje+=1;
+  let xpTotal=0;for(let x=1;x<=31;x++){ALL_H.forEach(([k])=>{if(get(`d${x}.h.${k}`,false))xpTotal++});[0,1,2].forEach(i=>{if(get(`d${x}.topdone${i}`,false))xpTotal+=3});if(get(`d${x}.log`))xpTotal+=2;if(get(`d${x}.notes`))xpTotal+=1}
+  let streak=0;for(let x=d;x>=1;x--){let dayXP=0;ALL_H.forEach(([k])=>{if(get(`d${x}.h.${k}`,false))dayXP++});if(dayXP>0)streak++;else break}
+  const frases=["Voce esta aqui. Ja e um passo.","Um dia de cada vez.","Feito e melhor que perfeito.","Voce ja fez mais do que imagina.","So a proxima coisa.","Tudo bem recomecar.","Respira. Escolhe uma coisa. Faz.","Progresso nao e linear.","Nao precisa ser perfeito. So precisa ser feito.","Ontem nao importa. Hoje sim.","Cada check e uma vitoria.","Voce ta aqui. Isso conta."];
+  const frase=frases[Math.floor(Math.random()*frases.length)];
+  const minutos=hora*60+new Date().getMinutes();
+  const acordar=7*60,dormir=23*60;
+  const totalDia=dormir-acordar;
+  const passado=Math.max(0,Math.min(totalDia,minutos-acordar));
+  const restante=totalDia-passado;
+  const pct=Math.round(restante/totalDia*100);
+  const hRest=Math.floor(restante/60);
+  const mRest=restante%60;
+  const barCor=pct>60?"#4CAF50":pct>30?"#F9A825":"#E53935";
+  return `<div class="hello">
+    <h1>${saudacao}</h1>
+    <p class="greeting">${pad(d)} out · ${WD[dd.getDay()]}</p>
+    <div class="daybar">
+      <div class="track"><div class="fill" style="width:${pct}%;background:${barCor}"></div></div>
+      <div class="dot" style="left:${100-pct}%"></div>
+      <div class="labels"><span>${hRest}h${mRest>0?pad(mRest):""} restam</span><span>${hora<12?"manha":hora<18?"tarde":"noite"}</span></div>
+    </div>
+    <div class="xp">${xpTotal}</div>
+    <div class="xp-label">XP total</div>
+    ${streak>1?`<div class="streak">${streak} dias seguidos</div>`:""}
+    <p class="frase" style="margin:10px 0 24px">${frase}</p>
+    <div style="max-width:380px;margin:0 auto">
+      <ul class="chk" style="gap:12px;text-align:left">${items.map(([k,label])=>
+        `<li class="big"><input type="checkbox" data-k="d${d}.h.${k}" ${get(`d${d}.h.${k}`,false)?"checked":""}><span>${label}</span></li>`
+      ).join("")}
+      <li class="big"><input type="checkbox" data-k="d${d}.h.outro" ${get(`d${d}.h.outro`,false)?"checked":""}><span style="flex:1">${ed(`d${d}.h.outrotxt`,"outro...","one")}</span></li></ul>
+    </div>
+    ${hora<12?`<div class="card" style="max-width:380px;margin:20px auto;text-align:left"><h3>Se so der pra fazer 1 coisa hoje</h3>${ed(`d${d}.top0`,"...","one")}</div>`:""}
+    ${hora>=18?`<div class="card" style="max-width:380px;margin:20px auto;text-align:left"><h3>Como foi?</h3>${ed(`d${d}.notes`,"","one")}</div>`:""}
+    <div class="start" style="margin-top:24px">
+      <button class="secondary" data-v="today">Ver dia completo</button>
+      <button class="secondary" data-v="capture">Capturar algo</button>
+    </div>
+    <p class="micro">+1 XP por check · +3 por prioridade feita · +2 por registro</p>
+  </div>`
 };
 V.today=()=>{
   const d=curDay,dd=DAYS[d-1];
@@ -191,8 +243,8 @@ V.today=()=>{
   `<div class="grid g2">
    <div>
     <div class="card"><h3>Top 3</h3>${[0,1,2].map(i=>`<div class="row"><span class="n">${i+1}</span><input type="checkbox" data-k="d${d}.topdone${i}" ${get(`d${d}.topdone${i}`,false)?"checked":""}>${ed(`d${d}.top${i}`,"","one")}</div>`).join("")}</div>
-    <div class="card"><h3>Agora <span class="hint">qual é a próxima microação?</span></h3>${ed(`d${d}.now`,"micro do micro: abrir material → fone → 10 min → registrar","one")}</div>
-    <div class="card"><h3>Checkpoints <span class="hint">onde estou · o que apareceu · próxima ação · mudar contexto?</span></h3>
+    <div class="card"><h3 data-tip="o menor passo possivel">Agora</h3>${ed(`d${d}.now`,"o que faco agora?","one")}</div>
+    <div class="card"><h3 data-tip="parou? anota onde esta e o que vem">Checkpoints</h3>
       ${CP.map((c,i)=>`<div class="row" style="margin-bottom:6px"><input type="checkbox" data-k="d${d}.cp${i}" ${get(`d${d}.cp${i}`,false)?"checked":""}><span style="width:130px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:600">${c}</span>${ed(`d${d}.cpn${i}`,"","one")}</div>`).join("")}</div>
     <div class="grid g2">
       <div class="card"><h3>Body</h3><ul class="chk">${BODY.map((b,i)=>cb(`d${d}.body${i}`,b)).join("")}</ul></div>
@@ -200,48 +252,14 @@ V.today=()=>{
     </div>
    </div>
    <div>
-    <div class="card"><h3>Feito hoje <span class="hint">marque o que aconteceu</span></h3><ul class="chk c3">${ROUT.map((b,i)=>cb(`d${d}.r${i}`,b)).join("")}<li><input type="checkbox" data-k="d${d}.r11" ${get(`d${d}.r11`,false)?"checked":""}>${ed(`d${d}.r11n`,"outro…","one")}</li></ul></div>
-    <div class="card"><h3>Registro do dia <span class="hint">o quê · quanto tempo · como foi</span></h3>${ed(`d${d}.log`,"07:10 passeio cães 30 min · 08:30 2 blocos relatório · 13:00 leitura cap. 4 · 18:00 treino pernas 45 min…","big")}</div>
-    <div class="card"><h3>Capture it <span class="hint">tudo que pipocar — organizar depois</span></h3>${ed(`d${d}.cap`,"","mid")}</div>
+    <div class="card"><h3 data-tip="marque o que rolou">Feito hoje</h3><ul class="chk c3">${ROUT.map((b,i)=>cb(`d${d}.r${i}`,b)).join("")}<li><input type="checkbox" data-k="d${d}.r11" ${get(`d${d}.r11`,false)?"checked":""}>${ed(`d${d}.r11n`,"outro…","one")}</li></ul></div>
+    <div class="card"><h3 data-tip="o que fez, quanto tempo, como foi">Registro</h3>${ed(`d${d}.log`,"o que fiz hoje...","big")}</div>
+    <div class="card"><h3 data-tip="pensou? joga aqui">Capture</h3>${ed(`d${d}.cap`,"","mid")}</div>
     <div class="card"><h3>Notas</h3>${ed(`d${d}.notes`,"","mid")}</div>
    </div>
   </div>`;
 };
-V.guide=()=>H("Guia de uso","passo a passo · detalhe é o que reduz a fricção")+`<div class="guide">
-<h3>1 · Abrir (manhã · 5 min · café)</h3><ol>
-<li>Abra <b>Hoje (D)</b>. Olhe a <b>Semana (W)</b>: quais compromissos e prioridades tocam hoje?</li>
-<li>Escreva o <b>Top 3</b>: três coisas que, feitas, fazem o dia valer — as que puxam as prioridades do mês (M).</li>
-<li>Preencha o <b>Agora</b> com a primeira microação, pequena a ponto de ser quase ridícula. <i>Ex.: “abrir o Anki” em vez de “estudar inglês”.</i></li>
-<li>Dia já começou torto? Pule tudo e vá para o <b>Chaos Mode (X)</b>.</li></ol>
-<h3>2 · Executar (ao longo do dia)</h3><ol>
-<li>Trabalhe em blocos (pomodoro 25/5 ou 50/10). Um bloco = uma linha no <b>Registro do dia</b>.</li>
-<li>Terminou algo do Top 3? Marque. Não terminou? Escreva o próximo passo no Agora.</li>
-<li>Pipocou pensamento, ideia, compra, mensagem? <b>Capture it</b>. Não resolva agora; só anote.</li>
-<li>Em cada <b>Checkpoint</b> (manhã · 2 pomodoros · almoço · tarde · fim do trabalho · noite) marque e responda em uma linha: <i>onde estou · o que apareceu · próxima ação · mudo de contexto?</i></li></ol>
-<h3>3 · Fechar (noite · 10 min)</h3><ol>
-<li>Marque o <b>Feito hoje</b>: leitura, treino, estudo, trabalho focado, casa, cachorros, conteúdo, água, sono… Cada quadradinho é um dado para a review.</li>
-<li>Complete o <b>Registro do dia</b> com detalhe: <i>“pomodoro leitura cap. 4 · treino pernas 45 min · passeio cães 30 min · 3 blocos de foco no relatório”</i>. Quanto mais específico, menos você depende de memória.</li>
-<li>Marque Body e Life. Uma frase em <b>Notas</b>: sentimento ou aprendizado do dia.</li>
-<li>Processe o Capture it: vira Top 3 de amanhã, vai para a Semana, para o Backlog (B) — ou apaga.</li>
-<li>Se tiver energia, escreva o Top 3 de amanhã antes de dormir.</li></ol>
-<h3>Domingo · planejar a semana (20 min)</h3><ol>
-<li>Abra <b>Semana (W)</b>. Copie compromissos do Overview (O) e da agenda do celular.</li>
-<li>Escolha 3 prioridades que avançam as prioridades do mês. Se não avança nada do RMM, não é prioridade.</li>
-<li>Preencha Treinos e <b>Accountability</b>: quem espera por você esta semana.</li>
-<li>Processe o Inbox (C). Conte os Feito hoje dos 7 dias (treinos, pomodoros de leitura) e anote no Glow Up (GU).</li></ol>
-<h3>Dia 18 · Route Review (R1) · Dia 25 · Monthly + Body Review (R2, R3) · Dia 27 · RMM de novembro (N)</h3><ul>
-<li><b>R1</b>: Continue / Stop / Start / Change olhando os registros diários — não a memória. Até 2 experimentos até o dia 31.</li>
-<li><b>R2 + R3</b>: some Feito hoje, tracker e KPIs. Nota 1–5 por área. Esboce novembro.</li>
-<li><b>N</b>: leia System Lab (L) e Debug (DB) inteiros. Só agora o planner muda.</li></ul>
-<h3>O que vai onde</h3><ul>
-<li><b>Top 3</b> é intenção · <b>Feito hoje</b> é hábito (marca-se) · <b>Registro</b> é evidência (o quê · quanto tempo · como foi).</li>
-<li><b>Capture it</b> (dia) para o que pipoca · <b>Inbox (C)</b> para o que não pertence a um dia · <b>Notas</b> para reflexões.</li>
-<li>Tem data → <b>Overview</b> e <b>Semana</b> · sem data → <b>Backlog</b> · esta semana → <b>Semana</b>, no dia vira Top 3.</li>
-<li><b>Guindaste (G)</b> é estrutura externa que puxa por semanas · <b>Accountability (A)</b> é pessoa/grupo numa semana específica.</li>
-<li>Algo <i>na vida</i> não aconteceu → <b>Debug</b> · algo <i>no planner</i> não funciona → <b>System Lab</b>. Não altere, registre.</li></ul>
-<h3>Exemplo de um dia</h3>
-<p class="ex">Top 3: fechar relatório X (3 blocos) · treino pernas 18h com Ana · gravar 1 story sobre o livro.<br>Agora: abrir o arquivo e escrever o título da seção 2.<br>Feito hoje: ☑ leitura ☑ treino ☐ estudo ☑ trabalho focado ☑ cachorros ☑ casa ☑ conteúdo ☑ água ☐ sono 7h+<br>Registro: 07:10 passeio cães 30 min · 08:30–10:00 relatório, 2 blocos, seção 2 pronta · 18:00 treino pernas 45 min, agachamento 40 kg · 20:30 story em 1 take · louça · roupa.<br>Notas: blocos de manhã rendem mais; tarde para tarefas leves. Testar amanhã.</p>
-<p class="rule">Regra do mês: <b>usar → observar → registrar.</b> O redesenho é dia 27.</p></div>`;
+V.guide=()=>{view="today";render();return ""};
 V.chaos=()=>H("Chaos Mode","quando o dia já começou desorganizado · só isto")+
  `<div class="card"><ul class="chk">${["banheiro / higiene","água","cachorros","alimentação"].map((c,i)=>cb(`d${curDay}.chaos${i}`,c,true)).join("")}
  <li class="big"><input type="checkbox" data-k="d${curDay}.chaos4" ${get(`d${curDay}.chaos4`,false)?"checked":""}><span>compromisso principal:</span>${ed(`d${curDay}.chaosmain`,"qual?","one")}</li></ul></div>`+
