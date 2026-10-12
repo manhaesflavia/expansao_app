@@ -141,17 +141,24 @@ Reducao de 50k para 1.2k tokens. Isso nao e otimizacao de software. E o resultad
 
 ---
 
-## O que vem por ai
+## Isso e uma serie
 
-Esse artigo cobre a primeira camada: schema, contrato e pipeline. Nos proximos, vou mostrar:
+Esse artigo e o primeiro. Ele cobre a arquitetura, o schema e as decisoes de engenharia. Os proximos vao cobrir o que nenhum artigo tecnico costuma mostrar: **os dados reais**.
 
+Eu sou o caso de estudo do meu proprio pipeline. Vou usar o Expansao no dia a dia, coletar dados sobre minha rotina, e publicar o que o sistema me ensinou. Sem filtro.
+
+O que esperar nos proximos artigos:
+
+- **Os dados da primeira semana**: quantos checks marquei, onde abandonei, o que o outcome 'blocked' me mostrou sobre minha rotina
 - **Classificacao por LLM em producao**: como o pipeline decide se "to exausta" e um log, uma captura ou um trigger de intervencao
-- **Gamificacao orientada a dados**: XP, streaks e barras de progresso calculados pelo pipeline, nao hardcoded no front
-- **Deteccao de padroes comportamentais**: SQL + embeddings pra identificar quando o usuario vai travar -- e agir antes
+- **O que funciona e o que nao funciona**: gamificacao resolveu? streak motivou ou virou pressao? a barra de tempo do dia mudou meu comportamento?
+- **Deteccao de padroes**: quando os dados sao suficientes pra SQL + embeddings identificarem que eu vou travar -- e agirem antes
 - **MCP em producao**: como um assistente pessoal consulta seus proprios dados gastando 97% menos tokens
 
-Se voce e engenheira de dados e quer aplicar o que sabe em algo que nao e dashboard corporativo, acompanha. Isso aqui ta so comecando.
+A pergunta que essa serie tenta responder: **uma engenheira de dados consegue usar o que sabe de pipeline, schema e analytics pra resolver um problema pessoal real?**
+
+Acompanha pra ver o resultado.
 
 ---
 
-*Expansao e um projeto pessoal. Pipeline de dados para gestao de rotina e habitos. Em desenvolvimento.*
+*Expansao e um projeto pessoal. Pipeline de dados para gestao de rotina e habitos. Esse e o artigo 1 de uma serie. Em desenvolvimento.*
